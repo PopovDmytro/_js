@@ -10,6 +10,8 @@ const ManifestPlugin = require('webpack-manifest-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const CleanPlugin = require('clean-webpack-plugin');
 
+const fs = require('fs');
+
 const parts = require('./webpack.parts');
 
 const lintJSOptions = {
@@ -20,7 +22,7 @@ const lintJSOptions = {
 
     // Toggle autofix
     fix: true,
-    cache: true,
+    cache: false,
 
     formatter: require('eslint-friendly-formatter')
 };
@@ -70,17 +72,20 @@ const commonConfig = merge([
         },
         plugins: [
             new HtmlPlugin({
+                filename: 'index.html',
                 template: './index.pug'
-            }),
+            })
             // new FriendlyErrorsPlugin(),
             // new StylelintPlugin(lintStylesOptions)
-        ],
+        ]
+        //html plugin for adding and generating custom pages inside ./app/pages directory
+            .concat(generateHtmlPlugins('./app/pages')),
         module: {
             noParse: /\.min\.js/
         }
     },
     parts.loadPug(),
-    parts.lintJS({include: paths.app, options: lintJSOptions}),
+    // parts.lintJS({include: paths.app, options: lintJSOptions}),
     parts.loadFonts({
         include: paths.app,
         options: {
@@ -237,4 +242,19 @@ function getPaths({
         build: path.join(__dirname, buildDir),
         staticDir
     });
+}
+
+//function for adding HtmlPlugin for custom added pages
+function generateHtmlPlugins (templateDir) {
+    const templateFiles = fs.readdirSync(path.resolve(__dirname, templateDir));
+    return templateFiles.map(item => {
+        // Split names and extension
+        const parts = item.split('.');
+        const name = parts[0];
+        const extension = parts[1];
+        return new HtmlPlugin({
+            filename: `${name}.html`,
+            template: path.resolve(__dirname, `${templateDir}/${name}.${extension}`)
+        });
+    })
 }

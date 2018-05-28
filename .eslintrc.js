@@ -32,7 +32,12 @@ module.exports = {
         'import/namespace': 2,
         'import/default': 2,
         'import/export': 2,
-        'no-console': 1,
-        'curly': 0
+        'curly': 0,
+        'semi': [0, 'always'],
+        'no-console': [0, 'allow'],
+        "indent": [0, 4],
+        'no-multiple-empty-lines': [0, 'always'],
+        'quotes': 0,
+        'no-unused-vars': [1, { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }]
     }
 };
