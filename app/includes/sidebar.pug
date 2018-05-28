@@ -1,0 +1,26 @@
+div.offcanvas-sidebar#sidebar-main
+    ul
+        li
+            a(href='#') link
+        li
+            a(href="#") opener
+            ul
+                - var x = 0;
+                - for (var i = 0; i < 5; i++)
+                    li
+                        - if (x === i)
+                            a(href='#') opener x
+                                ul
+                                    - for (x = 0; x < 4; x++)
+                                    li
+                                        a(href='#') link 1
+                        - else
+                            a(href='#') link x
+        li
+            a(href='#') link
+        li
+            a(href="#") opener 1
+            ul
+                - for (var x = 0; x < 4; x++)
+                    li
+                        a(href='#') link
