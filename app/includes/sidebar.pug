@@ -1,26 +1,30 @@
+div.sidebar-toggler sidebar toggle
+
 div.offcanvas-sidebar#sidebar-main
+    div.sidebar-toggler sidebar toggle
     ul
+        - for (var y = 0; y < 3; y++)
+            li
+                a(href='#') link 0
         li
-            a(href='#') link
-        li
-            a(href="#") opener
+            a(href="#") opener 0
             ul
-                - var x = 0;
+                - var x = 3;
                 - for (var i = 0; i < 5; i++)
                     li
                         - if (x === i)
-                            a(href='#') opener x
-                                ul
-                                    - for (x = 0; x < 4; x++)
+                            a(href='#') opener 1
+                            ul
+                                - for (var z = 0; z < 4; z++)
                                     li
-                                        a(href='#') link 1
+                                        a(href='#') link 2
                         - else
-                            a(href='#') link x
+                            a(href='#') link 1
         li
-            a(href='#') link
+            a(href='#') link 0
         li
             a(href="#") opener 1
             ul
                 - for (var x = 0; x < 4; x++)
                     li
-                        a(href='#') link
+                        a(href='#') link 1

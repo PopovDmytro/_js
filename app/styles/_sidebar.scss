@@ -1,9 +1,36 @@
-ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
+$minWidth: 768px;
+
+.sidebar {
+    width: 80%;
+    background-color: #555555;
+    color: #ffffff;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+
+    //display: none;
 
     ul {
-        padding-left: 20px;
+        list-style-type: none;
+        padding: 0 0 0 20px;
+        margin: 0;
     }
+
+    a {
+        color: #ffffff;
+    }
+
+    @media only screen and (min-width: $minWidth) {
+        width: 300px;
+    }
+}
+
+.sidebar-toggler {
+    background-color: #777777;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-block;
+    padding: 4px 8px;
+    width: auto;
 }
