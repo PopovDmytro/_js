@@ -2,18 +2,18 @@
 
 class Sidebar {
 
-    constructor(sidebearId = null,
+    constructor(sidebarId = null,
                 {
                     sidebarDefaultClass = 'sidebar',
                     position = 'left',//'top', 'right', 'bottom', 'left ', default 'left'
                     buttonToggleSelector = '.sidebar-toggle',
                     sidebarBehavior = 'push-content', //'push-content', 'over-content' , default 'push-content' (disable for top, bottom positions)
                     pageContainerSelector = 'body' //page container default 'body'
-                }) {
+                } = {}) {
         const pageWrapper = document.querySelector(pageContainerSelector);
-        this._sidebar = document.getElementById(sidebearId);
+        this._sidebar = document.getElementById(sidebarId);
 
-        if (sidebearId) {
+        if (this._sidebar) {
             this.preparingElements(this._sidebar, {sidebarDefaultClass, position});
             const classesBodyList = [sidebarBehavior, position];
             pageWrapper.classList.add(...classesBodyList);
@@ -27,7 +27,7 @@ class Sidebar {
                 sidebarTogglers[0].addEventListener('click', this.toggleSidebar.bind(this._sidebar, pageWrapper));
             }
             document.addEventListener('click', (e) => {
-                if(e.target && e.target.classList.contains(sidebearId + '_open')) {
+                if(e.target && e.target.classList.contains(sidebarId + '_open')) {
                     this.toggleSidebar.call(this._sidebar, pageWrapper);
                 }
             });
@@ -92,8 +92,13 @@ class Sidebar {
 }
 
 /*
-* element = 'id element', options {}
+* Sidebar('id element', options {
+                    sidebarDefaultClass: 'sidebar',
+                    position: 'left',
+                    buttonToggleSelector: '.sidebar-toggle',
+                    sidebarBehavior: 'push-content',
+                    pageContainerSelector: 'body'
+* })
 */
-const mainSidebar = new Sidebar('sidebar-main', {position: 'left'});
-// console.log(mainSidebar.sidebar);
+const mainSidebar = new Sidebar('sidebar-main');
 
