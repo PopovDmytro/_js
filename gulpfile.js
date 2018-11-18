@@ -1,6 +1,6 @@
 'use strict';
 
-const   gulp = require('gulp'),
+const gulp = require('gulp'),
     $ = require('gulp-load-plugins')(),
     watch = require('gulp-watch'),
     path = require('path'),
@@ -9,7 +9,7 @@ const   gulp = require('gulp'),
     filter = require('gulp-filter'),
     debug = require('gulp-debug');
 //styles
-const   postcss = require('gulp-postcss'),
+const postcss = require('gulp-postcss'),
     autoprefixer = require('autoprefixer'),
     atImport = require('postcss-import'),
     mqpacker = require('css-mqpacker'),
@@ -43,19 +43,20 @@ app.destrJs = path.join(app.destBase, 'destr/js');
 
 gulp.task('clean', ['cleancss']);
 
-gulp.task('cleancss', function () {
+gulp.task('cleancss', function() {
     return del(app.destCss + '*css*');
 });
 
 //compile scss to css
-gulp.task('scss', function () {
+gulp.task('scss', function() {
     return gulp.src(app.srcScss + '/**/*.scss')
         .pipe($.plumber())
         .pipe($.sourcemaps.init())
         .pipe($.sass({
             outputStyle: 'expanded',
             includePaths: ['node_modules/']
-        })).on('error', $.sass.logError)
+        }))
+        .on('error', $.sass.logError)
         //adding auto-prefixes, minimization and optimization css
         .pipe(postcss([
             autoprefixer({ browsers: ["last 3 versions", "IE 10"], }),
@@ -63,7 +64,7 @@ gulp.task('scss', function () {
             mqpacker(),
             cssnano()
         ]))
-        .pipe(debug({title: 'compile:'}))
+        .pipe(debug({ title: 'compile:' }))
         .pipe($.sourcemaps.write('.', {
             includeContent: false
         }))
@@ -73,35 +74,40 @@ gulp.task('scss', function () {
 });
 
 //js task
-gulp.task('js', function () {
+gulp.task('js', function() {
     return gulp.src(app.srcJs + '/*.js')
         .pipe(babel({
             presets: ['env'],
             minified: true,
             sourceMaps: 'map'
         }))
+        .on('error', function(e) {
+            console.log('>>> ERROR', e);
+            // emit here
+            this.emit('end');
+        })
         .pipe(gulp.dest(app.destrJs))
         .pipe($.livereload());
 });
 
 //gulp watch js, scss files changes
-gulp.task('watch', function () {
+gulp.task('watch', function() {
     $.livereload.listen();
 
-    gulp.watch(app.srcScss + '/**/*.scss', function () {
+    gulp.watch(app.srcScss + '/**/*.scss', function() {
         rs('scss');
     });
 
-    gulp.watch(app.srcJs + '/*.js', function () {
+    gulp.watch(app.srcJs + '/*.js', function() {
         rs('js');
     });
 });
 
 // Dev tools by default
-gulp.task('default', function () {
+gulp.task('default', function() {
     rs('clean', 'scss', 'js', 'watch');
 });
 
-gulp.task('build', function () {
+gulp.task('build', function() {
     rs('clean', 'scss');
 });
