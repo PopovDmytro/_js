@@ -47,7 +47,7 @@ window.Game = (function () {
         HIT_THE_MARK: 4
     };
 
-    var NAMES = ['Кекс', 'Катя', 'Игорь'];
+    var NAMES = ['Keks', 'Katia', 'Igor'];
 
     /**
      * Порядок прохождения уровней.
@@ -451,16 +451,16 @@ window.Game = (function () {
                         }));
                         return;
                     }
-                    message = 'Вы победили Газебо!\nУра!';
+                    message = 'You have win Gazepo! Hurray!';
                     break;
                 case Verdict.FAIL:
-                    message = 'Вы проиграли!';
+                    message = 'You lose the game!';
                     break;
                 case Verdict.PAUSE:
-                    message = 'Игра на паузе!\nНажмите Пробел, чтобы продолжить';
+                    message = 'Game on pause!\nPres space, and continue.';
                     break;
                 case Verdict.INTRO:
-                    message = 'Добро пожаловать!\nНажмите Пробел для начала игры';
+                    message = 'Welcome!\nPres space for start the game.';
                     break;
             }
 
@@ -472,7 +472,7 @@ window.Game = (function () {
             var minTimeInSec = 1000;
 
             var statistic = {
-                'Вы': time
+                'You': time
             };
 
             for (var i = 0; i < NAMES.length; i++) {
