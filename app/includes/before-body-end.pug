@@ -1,0 +1,39 @@
+template#card
+    article.map__card.popup
+        img.popup__avatar(src='img/avatars/user01.png', width='70', height='70', alt='User Avatar')
+        button.popup__close(type='button') Close
+        h3.popup__title Place for just married
+        p.popup__text.popup__text--address 102-0082 Tōkyō-to, Chiyoda-ku, Ichibanchō, 14−3
+        p.popup__text.popup__text--price
+            | 150 USD
+            span /night
+        h4.popup__type Apartment
+        p.popup__text.popup__text--capacity 2 rooms for 3 guests
+        p.popup__text.popup__text--time Check in after 14:00, check out till 10:00
+        ul.popup__features
+            li.popup__feature.popup__feature--wifi
+            li.popup__feature.popup__feature--dishwasher
+            li.popup__feature.popup__feature--parking
+            li.popup__feature.popup__feature--washer
+            li.popup__feature.popup__feature--elevator
+            li.popup__feature.popup__feature--conditioner
+        p.popup__description
+            | Perfect apartment in the middle of Tokyo. It is like for tourists, and for businessman. Apartment full completed.
+        .popup__photos
+            img.popup__photo(src='', width='45', height='40', alt='Apartment photo')
+
+template#pin
+    button.map__pin(type='button', style='left: 200px; top: 400px;')
+        img(src='img/avatars/user07.png', width='40', height='40', draggable='false', alt='Article point')
+
+template#success
+    .success
+        p.success__message
+            | Your article
+            br
+            | placed success!
+
+template#error
+    .error
+        p.error__message Error loading article !
+        button.error__button(href='#') Please try again.
