@@ -7,3 +7,4 @@ if (process.env.NODE_ENV !== 'production') {
 
 //
 import './source/main';
+import './source/map';

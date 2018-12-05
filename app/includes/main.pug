@@ -1,14 +1,14 @@
 main
     .promo
         h1.promo__title.visually-hidden Booking
-        img(src='img/obooking.svg', alt='Booking', width='215', height='45')
+        img(src='./images/booking.svg', alt='Booking', width='215', height='45')
 
     section.map.map--faded
         .map__pins
             .map__overlay
                 h2.map__title And Tokyo again !
             button.map__pin.map__pin--main(style='left: 570px; top: 375px;')
-                img(src='img/muffin-red.svg', width='40', height='44', draggable='false', alt='article point')
+                img(src='./images/muffin-red.svg', width='40', height='44', draggable='false', alt='article point')
                 svg(viewBox='0 0 70 70', width='156', height='156', aria-label='Point for searching')
                     defs
                         path#tophalf(d='M35,35m-23,0a23,23 0 1,1 46,0a23,23 0 1,1 -46,0')
@@ -60,7 +60,7 @@ main
                 legend.ad-form-header__title Your photo (for map)
                 .ad-form-header__upload
                     .ad-form-header__preview
-                        img(src='img/muffin-grey.svg', alt='User avatar', width='40', height='44')
+                        img(src='./images/muffin-grey.svg', alt='User avatar', width='40', height='44')
                     .ad-form__field
                         input#avatar.ad-form-header__input.visually-hidden(type='file', name='avatar')
                         label.ad-form-header__drop-zone(for='avatar') Load or drag and drop photo
@@ -132,5 +132,5 @@ main
                     .ad-form__photo
             fieldset.ad-form__element.ad-form__element--submit
                 button.ad-form__submit(type='submit') Apply
-                |           or
+                | &nbsp;or&nbsp;
                 button.ad-form__reset(type='reset') Clean
