@@ -62,15 +62,16 @@
 
   <div class="demo"></div>
 
-  <div class="setup-open">
+  <div class="setup-open" tabindex="0" >
     <img src="./img/user-1.jpg" class="setup-open-icon">
   </div>
 </header>
 
-<div class="overlay setup hidden">
+<div class="overlay setup hidden" tabindex="0" >
   <form class="setup-wizard-form"
         method="post"
         enctype="multipart/form-data"
+        action="https://js.dump.academy/code-and-magick"
         autocomplete="off">
 
     <div class="setup-title">
@@ -81,12 +82,13 @@
         </div>
         <label>
           <input type="text" name="username"
+                 minlength="2"
                  maxlength="25" required
                  class="setup-user-name" value="Blue Pendalf"/>
         </label>
       </div>
 
-      <span class="setup-close">&times;</span>
+      <span class="setup-close" tabindex="0" >&times;</span>
     </div>
 
 
