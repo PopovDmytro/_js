@@ -12,12 +12,38 @@ const templateArrPhotos = ["http://o0.github.io/assets/images/tokyo/hotel1.jpg",
 const templateData = randomDataGenerator(templateArrOfferTitle, templateArrType, templateArrTimes, templateArrFeatures, templateArrPhotos);
 //
 
-renderPins(templateData, '.map__pins', '#pin');
+const map = document.querySelector('.map'),
+      addForm = document.querySelector('.ad-form');
 
-renderCard(templateData, '.map', '#card', '.map__filters-container');
+const mainPin = map.querySelector('.map__pin--main');
 
-const map = document.querySelector('.map');
-map.classList.remove('map--faded');
+//disable all inputs in form
+forEach(addForm.elements, (el) => { el.setAttribute('disabled', true); });
+
+//events
+mainPin.addEventListener('mouseup', function (e) {
+    map.classList.remove('map--faded');
+    renderPins(templateData, '.map__pins', '#pin');
+
+    forEach(addForm.elements, (el) => { el.removeAttribute('disabled'); });
+    addForm.classList.remove('ad-form--disabled');
+
+    addForm.querySelector('#title').value = 'test title';
+    addForm.querySelector('#address').value = `x: ${parseInt(this.style.left) + 32.5} ,y: ${parseInt(this.style.top) + 80}`;
+    console.log(this.style.top);
+
+// main pi height:80px, width:32.5px
+});
+
+document.querySelector('.map__pins').addEventListener('click', function (e) {
+
+    const activeEl = document.activeElement;
+
+    if(activeEl.classList.contains('map__pin') && activeEl.id) {
+        const activeCard = templateData.find((item) => item.id === activeEl.id);
+        renderCard(activeCard, '.map', '#card', '.map__filters-container');
+    }
+});
 
 /*
 * functions
@@ -38,16 +64,18 @@ function renderPins(dataArr, blockSelector, templateSelector) {
     document.querySelector(blockSelector).appendChild(fragment);
 }
 //insert cart into block before element
-function renderCard(dataArr, blockSelector, templateSelector, appendBeforeSelector) {
+function renderCard(dataObj, blockSelector, templateSelector, appendBeforeSelector) {
     if(!blockSelector || !templateSelector) return;
 
     const appendBeforeEl = document.querySelector(appendBeforeSelector);
 
     const template = document.querySelector(templateSelector);
     const fragment = document.createDocumentFragment();
-    const element = createCartDOMElement(dataArr[0], template);
+    const element = createCartDOMElement(dataObj, template);
+    element.querySelector('.popup__close').addEventListener('click', function (e) {
+        this.parentNode.classList.add('hidden');
+    });
     fragment.appendChild(element);
-
     document.querySelector(blockSelector).insertBefore(fragment, appendBeforeEl);
 }
 //create pin DOM element
@@ -55,10 +83,11 @@ function createPinDOMElement(dataObj, template) {
     const newTemplate = template.content.cloneNode(true);
 
     const avatarSize = {
-        w: 40,
-        h: 40
+        w: 50,
+        h: 70
     };
 
+    newTemplate.querySelector('.map__pin').setAttribute('id', dataObj.id);
     newTemplate.querySelector('.map__pin').style.cssText = `left:${dataObj.location.x + avatarSize.w / 2}px; top:${dataObj.location.y + avatarSize.h}px`;
     newTemplate.querySelector('img').setAttribute('src', dataObj.avatar);
     newTemplate.querySelector('img').setAttribute('alt', dataObj.offer.title);
@@ -133,6 +162,7 @@ function randomDataGenerator(arrOfferTitle, arrType, arrTimes, arrFeatures, arrP
         }
 
         const item = {
+            id: `pin_${i + Date.now()}`,
             avatar: imagesArr[i],
             offer: {
                 title: arrOfferTitle[randomN(0, arrOfferTitle.length - 1)],
@@ -156,4 +186,10 @@ function randomDataGenerator(arrOfferTitle, arrType, arrTimes, arrFeatures, arrP
         data.push(item)
     }
     return data;
+}
+//for each function
+function forEach (array, callback, scope) {
+    for (let i = 0; i < array.length; i++) {
+        callback.call(scope, array[i], i);
+    }
 }
