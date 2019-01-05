@@ -8,31 +8,110 @@ const templateArrOfComments = ['Всё отлично!', 'В целом всё 
 const templateArrOfDescriptions = ['Тестим новую камеру!', 'Затусили с друзьями на море', 'Как же круто тут кормят', 'Отдыхаем...', 'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......', 'Вот это тачка!',];
 const templateData = randomDataGenerator(templateArrOfComments, templateArrOfDescriptions);
 //
-
 renderPosts(templateData, '.pictures', '#picture');
 
-//big-picture showing and set data from templateData
 const bigPicture = document.querySelector('.big-picture');
-bigPicture.classList.remove('hidden');
-bigPicture.querySelector('.big-picture__img img').setAttribute('src', templateData[0].url);
-bigPicture.querySelector('.likes-count').textContent = templateData[0].likes;
-bigPicture.querySelector('.social__comment-count .comments-shows').textContent = templateData[0].comments.length;
-bigPicture.querySelector('.social__caption').textContent = templateData[0].description;
+
+const uploadForm = document.querySelector('.img-upload__form');
+    imgUploadOverlay = uploadForm.querySelector('.img-upload__overlay'),
+    imgIploadInput = uploadForm.querySelector('.img-upload__input');
+
+//temporary hide elements
 bigPicture.querySelector('.comments-count').classList.add('visually-hidden');
 bigPicture.querySelector('.social__comments-loader').classList.add('visually-hidden');
+//
 
-const commentsList = document.querySelector('.social__comments');
-const commentsFragment = document.createDocumentFragment();
-for(let i = 0; i < templateData[0].comments.length; i++) {
-    const commentLi = createCommentDOMElement(templateData[0].comments[i]);
-    commentsFragment.appendChild(commentLi);
+/*
+* events
+*/
+
+document.querySelector('.pictures.container').addEventListener('click', function (e) {
+
+    const activeEl = document.activeElement;
+
+    if(activeEl.classList.contains('picture') && activeEl.id) {
+        const activePicture = templateData.find((item) => item.id === activeEl.id);
+        createBigPictureDOMElement(activePicture, bigPicture);
+        bigPicture.classList.remove('hidden');
+    }
+});
+
+imgIploadInput.addEventListener('change', function (e) {
+
+    if(this.value) {
+        imgUploadOverlay.classList.remove('hidden');
+    }
+});
+
+uploadForm.querySelector('.effect-level__pin').addEventListener('mouseup', changeEffectSize);
+
+uploadForm.querySelector('.effect-level__line').addEventListener('click', changeEffectSize);
+
+function changeEffectSize () {
+    console.log(uploadForm.querySelector('.effects__radio:checked'));
+
+    const y = uploadForm.querySelector('.effect-level__line').clientLeft ;
+    // const y = uploadForm.querySelector('.effect-level__line').clientLeft ;
+    // const x = uploadForm.querySelector('.effect-level__line').offsetLeft ;
+
+    console.log(y);
 }
-commentsList.appendChild(commentsFragment);
 
+closeElement(document.querySelector('.big-picture__cancel'), 'big-picture');
+closeElement(document.querySelector('.img-upload__cancel'), 'img-upload__overlay');
 /*
 * functions
 */
 
+//close element on click cancel button
+function closeElement(cancelEl, elClassToHide) {
+    cancelEl.addEventListener('click', function (e) {
+        const parent = findAncestor(this, elClassToHide);
+        parent.classList.add('hidden');
+    });
+}
+//generate random posts data
+function randomDataGenerator(arrComments, arrDescriptions, dataLength = 25) {
+    const data = [];
+
+    for (let i = 0; i < dataLength; i++) {
+
+        const item = {
+            id: `picture_${i}`,
+            url: `./photos/${i + 1}.jpg`, //n from 1 to 25
+            likes: `${randomN(15, 200)}`, //n from 15 to 200
+            comments: [], //array of strings
+            description: arrDescriptions[randomN(0, arrDescriptions.length - 1)] //string
+        };
+
+        for (let j = 0; j < randomN(1, 2); j++) {
+            item.comments.push(arrComments[randomN(0, arrComments.length - 1)]);
+        }
+
+        data.push(item)
+    }
+    return data;
+}
+//create big-picture DOM element
+function createBigPictureDOMElement(dataObj, bigPictureEl) {
+    bigPictureEl.querySelector('.big-picture__img img').setAttribute('src', dataObj.url);
+    bigPictureEl.querySelector('.likes-count').textContent = dataObj.likes;
+    bigPictureEl.querySelector('.social__comment-count .comments-shows').textContent = dataObj.comments.length;
+    bigPictureEl.querySelector('.social__caption').textContent = dataObj.description;
+
+    const commentsList = document.querySelector('.social__comments');
+    commentsList.appendChild(createCommentsFragment(dataObj.comments));
+}
+//create comments fragment
+function createCommentsFragment(dataArr) {
+    const fragment = document.createDocumentFragment();
+    for(let i = 0; i < dataArr.length; i++) {
+        const commentLi = createCommentDOMElement(templateData[0].comments[i]);
+        fragment.appendChild(commentLi);
+    }
+
+    return fragment;
+}
 //insert elements into block
 function renderPosts(dataArr, blockSelector, templateSelector) {
     if(!blockSelector || !templateSelector) return;
@@ -51,6 +130,7 @@ function renderPosts(dataArr, blockSelector, templateSelector) {
 function createPostDOMElement(dataObj, template) {
     const newTemplate = template.content.cloneNode(true);
 
+    newTemplate.querySelector('.picture').setAttribute('id', dataObj.id);
     newTemplate.querySelector('img').setAttribute('src', dataObj.url);
 
     insertTextAndAppend(
@@ -107,24 +187,8 @@ function insertTextAndAppend(newElement, text, appendTo) {
 function randomN(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
-//generate random posts data
-function randomDataGenerator(arrComments, arrDescriptions, dataLength = 25) {
-    const data = [];
-
-    for (let i = 0; i < dataLength; i++) {
-
-        const item = {
-            url: `./photos/${i + 1}.jpg`, //n from 1 to 25
-            likes: `${randomN(15, 200)}`, //n from 15 to 200
-            comments: [], //array of strings
-            description: arrDescriptions[randomN(0, arrDescriptions.length - 1)] //string
-        };
-
-        for (let j = 0; j < randomN(1, 2); j++) {
-            item.comments.push(arrComments[randomN(0, arrComments.length - 1)]);
-        }
-
-        data.push(item)
-    }
-    return data;
+//find ancestor
+function findAncestor (el, cls) {
+    while ((el = el.parentElement) && !el.classList.contains(cls));
+    return el;
 }
