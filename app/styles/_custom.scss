@@ -1,3 +1,16 @@
 body {
     font-family: 'Open Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+    min-width: 100vw;
+}
+
+.page-wrapper {
+    padding: 0 10px;
+}
+
+.sidebar-action-wrapper {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0;
 }

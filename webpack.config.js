@@ -79,7 +79,7 @@ const commonConfig = merge([
             // new StylelintPlugin(lintStylesOptions)
         ]
         //html plugin for adding and generating custom pages inside ./app/pages directory
-            .concat(generateHtmlPlugins('./app/pages')),
+            .concat(generateHtmlPlugins('./app/pages/')),
         module: {
             noParse: /\.min\.js/
         }

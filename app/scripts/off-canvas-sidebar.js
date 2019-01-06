@@ -1,12 +1,16 @@
+/*
+* offcanvas side bar v 0.0.2
+*/
+
 "use strict";
 
 class Sidebar {
-
     constructor(sidebarId = null,
                 {
                     sidebarDefaultClass = 'sidebar',
+                    sidebarMenuClass = 'sidebar-menu',
                     position = 'left',//'top', 'right', 'bottom', 'left ', default 'left'
-                    buttonToggleSelector = '.sidebar-toggle',
+                    buttonToggleSelector = 'sidebar-toggle',
                     sidebarBehavior = 'push-content', //'push-content', 'over-content' , default 'push-content' (disable for top, bottom positions)
                     pageContainerSelector = 'body' //page container default 'body'
                 } = {}) {
@@ -14,36 +18,39 @@ class Sidebar {
         this._sidebar = document.getElementById(sidebarId);
 
         if (this._sidebar) {
-            this.preparingElements(this._sidebar, {sidebarDefaultClass, position});
+            this.preparingElements(this._sidebar, {sidebarDefaultClass, sidebarMenuClass, position});
             const classesBodyList = [sidebarBehavior, position];
-            pageWrapper.classList.add(...classesBodyList);
-            //add event listener for toggle sidebar
-            const sidebarTogglers = document.querySelectorAll(buttonToggleSelector);
+            const sidebarTogglers = document.querySelectorAll(`#${sidebarId} .${buttonToggleSelector}, [data-sidebar-id="${sidebarId}"]`);
+            if(!sidebarTogglers.length) {
+                throw new Error('Please check you sidebar togglers it / they should have class "buttonToggleSelector" or attribute [data-sidebar-id="sidebarId"]');
+            }
             if(sidebarTogglers.length > 0) {
                 for (let i = 0; i < sidebarTogglers.length; i++) {
-                    sidebarTogglers[i].addEventListener('click', this.toggleSidebar.bind(this._sidebar, pageWrapper));
+                    sidebarTogglers[i].addEventListener('click', this.toggleSidebar.bind(this._sidebar, pageWrapper, classesBodyList));
                 }
             } else {
-                sidebarTogglers[0].addEventListener('click', this.toggleSidebar.bind(this._sidebar, pageWrapper));
+                sidebarTogglers[0].addEventListener('click', this.toggleSidebar.bind(this._sidebar, pageWrapper, classesBodyList));
             }
             document.addEventListener('click', (e) => {
                 if(e.target && e.target.classList.contains(sidebarId + '_open')) {
-                    this.toggleSidebar.call(this._sidebar, pageWrapper);
+                    this.toggleSidebar.call(this._sidebar, pageWrapper, classesBodyList);
                 }
             });
         }
     }
     // adding classes to wrapper, main ul, children
-    preparingElements(sidebar, {sidebarDefaultClass, position}) {
+    preparingElements(sidebar, {sidebarDefaultClass, sidebarMenuClass, position}) {
         const classesList = [sidebarDefaultClass, position];
         //adding classes to wrapper
         sidebar.classList.add(...classesList);
         //adding classes to links and subLinks and
-        const ul = sidebar.querySelector('ul');
-        ul.classList.add('list_0');
-        //
-        this.findElementInsideElement(ul);
-        this.addToggleToListParent(ul, '.has-child-list');
+        if(this._sidebar.querySelector(`.${sidebarMenuClass}`)) {
+            const ul = this._sidebar.querySelector(`.${sidebarMenuClass}`);
+            ul.classList.add('list_0');
+            //
+            this.findElementInsideElement(ul);
+            this.addToggleToListParent(ul, '.has-child-list');
+        }
     }
     //recursively add classes on ul, li
     findElementInsideElement(el, counter = 0) {
@@ -76,18 +83,27 @@ class Sidebar {
             listParentsNodes[i].insertBefore(clone, listParentsNodes[i].firstChild);
         }
 
-        document.addEventListener('click', (e) => {
+        this._sidebar.addEventListener('click', function (e) {
             if(e.target && e.target.classList.contains(toggleClass)) {
                 e.target.parentNode.classList.toggle('open');
             }
         });
     }
     //on click event sidebar toggle button function
-    toggleSidebar(pageWrapper) {
+    toggleSidebar(pageWrapper, classesBodyList) {
         //this sidebar toggle class open
         this.classList.toggle('open');
         // page wrapper toggle class open
-        pageWrapper.classList.toggle(this.id + '_open');
+        if(pageWrapper.classList.contains(`${this.id}_open`)) {
+            pageWrapper.classList.remove(`${this.id}_open`, ...classesBodyList);
+        } else {
+            pageWrapper.classList.add(`${this.id}_open`, ...classesBodyList);
+        }
+    }
+
+    //target parent toggle open class
+    targetParentToggle(e, toggleClass) {
+
     }
 }
 
@@ -95,10 +111,12 @@ class Sidebar {
 * Sidebar('id element', options {
                     sidebarDefaultClass: 'sidebar',
                     position: 'left',
-                    buttonToggleSelector: '.sidebar-toggle',
+                    buttonToggleSelector: 'sidebar-toggle',
                     sidebarBehavior: 'push-content',
                     pageContainerSelector: 'body'
-* })
+* });
 */
-const mainSidebar = new Sidebar('sidebar-main');
+const sidebar = new Sidebar('sidebar1');
+//
+const sidebarRight = new Sidebar('sidebar2', {position: 'right'});
 

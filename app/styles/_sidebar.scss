@@ -45,8 +45,12 @@ $positionList: (top, right, bottom, left);
             &.#{$position}[class*='open'].push-content {
                 @if $position == 'top' or $position == 'bottom' {
                     #{$position}: auto;
-                } @else {
+                }
+                @if $position == 'left' {
                     #{$position}: $maxWidth;
+                }
+                @if $position == 'right' {
+                    left: -$maxWidth;
                 }
             }
         }
@@ -61,6 +65,10 @@ body {
     min-width: 90%;
     overflow-x: hidden;
     position: relative;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
     transition: top $transitionTime, right $transitionTime, bottom $transitionTime, left $transitionTime;
 
     //transparent overlay

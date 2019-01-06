@@ -1,8 +1,39 @@
-div.sidebar-toggle sidebar toggle
+.sidebar-action-wrapper
+    div.sidebar-toggle(data-sidebar-id="sidebar1") sidebar left
+    div.sidebar-toggle(data-sidebar-id="sidebar2") sidebar right
 
-div.offcanvas-sidebar#sidebar-main
+div.offcanvas-sidebar#sidebar1
     div.sidebar-toggle sidebar toggle
-    ul
+    ul.sidebar-menu
+        - for (var y = 0; y < 3; y++)
+            li
+                a(href='#') link 0
+        li
+            a(href="#") opener 0
+            ul
+                - var x = 3;
+                - for (var i = 0; i < 5; i++)
+                    li
+                        - if (x === i)
+                            a(href='#') opener 1
+                            ul
+                                - for (var z = 0; z < 4; z++)
+                                    li
+                                        a(href='#') link 2
+                        - else
+                            a(href='#') link 1
+        li
+            a(href='#') link 0
+        li
+            a(href="#") opener 0
+            ul
+                - for (var x = 0; x < 4; x++)
+                    li
+                        a(href='#') link
+
+div.offcanvas-sidebar#sidebar2
+    div.sidebar-toggle sidebar toggle
+    ul.sidebar-menu
         - for (var y = 0; y < 3; y++)
             li
                 a(href='#') link 0
