@@ -113,7 +113,7 @@ let m = new MyPreviewClass();
 function Human (name) {
     this.name = name;
     this.talk = function () {
-        console.log(`Hello my name is ${this.name} \n`);
+        // console.log(`Hello my name is ${this.name} \n`);
     }
 }
 
@@ -146,7 +146,7 @@ function Teacher(name) {
     this.speciality = "Teacher";
 
     this.talk = function () {
-        console.log(`Hello I am a teacher, my name is ${this.name} \n`);
+        // console.log(`Hello I am a teacher, my name is ${this.name} \n`);
     }
 }
 Teacher.prototype = human;

@@ -1,0 +1,169 @@
+.modals-togglers-block {
+
+    .modal-toggle {
+        margin-right: 10px;
+    }
+}
+
+.modal-toggle {
+    background-color: #1c326e;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-block;
+    padding: 4px 8px;
+}
+
+.modal {
+
+    .modal-toggle {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        z-index: 1;
+    }
+}
+
+/* * */
+$transitionTime: .3s;
+
+/* modal styles */
+.modal-open {
+    overflow: hidden;
+    padding-right: 17px;
+}
+
+.modal {
+    position: fixed;
+    overflow: hidden;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    visibility: hidden;
+    z-index: 1;
+
+    &.open {
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        &,
+        &:after,
+        .modal-wrapper {
+            visibility: visible;
+        }
+    }
+
+    &:after {
+        content: '';
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 0;
+        visibility: hidden;
+    }
+
+    .modal-wrapper {
+        position: relative;
+        width: auto;
+        max-width: 100%;
+        margin-top: 50px;
+        z-index: 1;
+        visibility: hidden;
+
+        &.centered {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+    }
+
+    .modal-content {
+        position: relative;
+        border: 1px solid #333333;
+        border-radius: 3px;
+        background-color: #fff;
+        display: flex;
+        flex-direction: column;
+        padding: 10px 30px;
+    }
+
+    .modal-body {
+        flex-grow: 1;
+        width: 100%;
+    }
+
+    /* animations */
+    &.fadeIn {
+
+        .modal-wrapper,
+        &:after {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity $transitionTime, visibility $transitionTime;
+        }
+
+        &.open {
+
+            .modal-wrapper,
+            &:after {
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+    }
+
+    &.slideDown,
+    &.slideUp {
+        transition: visibility $transitionTime;
+
+        &.open {
+
+            .modal-wrapper {
+                transform: translateY(0vw);
+            }
+        }
+
+        &:after {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity $transitionTime, visibility $transitionTime;
+        }
+
+        &.open {
+
+            &:after {
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+    }
+
+    &.slideDown {
+
+        .modal-wrapper {
+            transform: translateY(-100vw);
+            transition: transform $transitionTime;
+        }
+    }
+
+    &.slideUp {
+
+        .modal-wrapper {
+            transform: translateY(100vw);
+            transition: transform $transitionTime;
+        }
+    }
+    /* * */
+
+    @media only screen and (min-width: 768px) {
+
+        .modal-wrapper {
+            max-width: 70vw;
+            margin: 20px auto;
+        }
+    }
+}

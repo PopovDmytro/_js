@@ -57,10 +57,6 @@ $positionList: (top, right, bottom, left);
     }
 }
 //
-html {
-
-}
-
 body {
     min-width: 90%;
     overflow-x: hidden;
@@ -86,7 +82,7 @@ body {
         z-index: 9;
     }
 
-    &[class*="open"] {
+    &[class*="_open"] {
         position: fixed;
 
         &:after {

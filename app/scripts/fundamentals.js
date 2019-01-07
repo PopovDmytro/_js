@@ -11,7 +11,7 @@
     }
 }
 //template string -------
-{
+// {
     function createEmail(firstName, purchasePrice) {
         let shipping = 5.95;
         console.log(
@@ -20,7 +20,7 @@
                             Shipping: $${shipping}`
         );
     }
-}
+// }
 // spread operator -------
 {
     let cats = ['Tabby', 'Siamese', 'Persian'];
@@ -64,7 +64,6 @@
 // person.printActions();
 }
 //destructing -------
-{
     let [variable1, , , variable4] = ['Spokane', 'Boston', 'Los Angeles', 'Seattle', 'Portland'];
     // console.log(variable1, variable4);
     let sandwich = {
@@ -81,9 +80,7 @@
     }
 
 // console.log(vacationMarketing(sandwich));
-}
 //generators -------
-{
 /*
     function* director() {
         yield "Tree";
@@ -117,7 +114,6 @@
             // console.log(letter.value);
         }
     }, 500);
-}
 //classes -------
 class Vehicle {
 
