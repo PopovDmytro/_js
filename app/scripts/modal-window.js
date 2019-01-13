@@ -2,9 +2,9 @@
 * modal window v 0.0.1
 */
 
-"use strict";
+;"use strict";
 
-(function (factory) {
+;(function (factory) {
 
     factory();
 
