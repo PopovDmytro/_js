@@ -8,6 +8,8 @@ import './modal-window';
 
 import './accordion';
 
+import './tabs';
+
 if (process.env.NODE_ENV !== 'production') {
     require('./../index.pug');
 }

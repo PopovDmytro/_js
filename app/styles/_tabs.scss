@@ -1,0 +1,58 @@
+$transitionTime: 0.3s;
+//
+.tab {
+
+    &-section {
+        border: 1px solid #cccccc;
+        padding: 20px;
+    }
+
+    &-head {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        position: relative;
+
+        a {
+            text-decoration: none;
+        }
+    }
+
+    &-nav {
+        padding: 4px 0;
+        margin-right: 20px;
+
+        //active state
+        &.active {}
+    }
+
+    &-underline {
+        position: absolute;
+        bottom: 0;
+        height: 2px;
+        background: #1c326e;
+        transition: all $transitionTime;
+    }
+
+    &-body {
+        display: flex;
+        overflow: hidden;
+    }
+
+    &-content {
+        flex-shrink: 0;
+        width: 100%;
+        transition: transform $transitionTime;
+
+        //active state
+        &.active {}
+    }
+
+    @media only screen and (min-width: 768px) {
+
+        &-section {
+            max-width: 760px;
+            margin: 40px auto;
+        }
+    }
+}

@@ -24,7 +24,6 @@
         const section = target.closest('.section'),
             content = section.querySelector('.accordion-content');
 
-
         if(content.offsetHeight && content.offsetHeight !== content.scrollHeight) {
             return;
         }
@@ -59,7 +58,6 @@
                 clearInterval(timer);
             }
         },1);
-
     }
 
 })();
