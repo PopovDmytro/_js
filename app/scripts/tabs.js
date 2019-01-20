@@ -1,55 +1,89 @@
 /*
-* accordion v 0.0.1
+* accordion v 0.0.2
 */
-
 ;"use strict";
+
 const tabSection = {
-    init() {
-        document.addEventListener("click", this, false);
-        document.addEventListener("mouseover", this, false);
-        window.onresize = this.handleEvent.bind(this);
-        //making active element after loading
-        const active = document.querySelector('.tab-section .tab-nav.active a');
-        if (active) {
-            active.click();
+    init(options) {
+
+        //set options if exist
+        for (let key in options) {
+            if (options.hasOwnProperty(key) && options[key]) {
+                this.options[key] = options[key];
+            }
+        }
+
+        //initialize tabs
+        this.callEventHandler();
+
+        //change tabs on events
+        const events = this.options.events;
+        for (let i = 0; i < events.length; i++) {
+            document.addEventListener(events[i], this, false);
+        }
+
+        //change tabs on window resize
+        window.onresize = this.callEventHandler.bind(this);
+    },
+    callEventHandler() {
+        const activeNodeList = document.querySelectorAll(`${this.options.tabSectionSelector} ${this.options.tabNavSelector}.${this.options.activeClass} ${this.options.switchTag}`);
+        if (activeNodeList.length) {
+            for (let i = 0; i < activeNodeList.length; i++) {
+                this.handleEvent(activeNodeList[i]);
+            }
+        } else if (activeNodeList) {
+            this.handleEvent(activeNodeList[0]);
         }
     },
-    handleEvent: function (e) {
-
-        let t = e.target;
-
-        if (e.type === 'resize') {
-            t = document.querySelector('.tab-section .tab-nav.active a');
-        }
-
-        if (e.type === 'mouseover' && t.parentNode && t.parentNode.classList.contains('active')) {
+    handleEvent(e) {
+        let t;
+        if (e && e.type) {
+            t = e.target;
+        } else if (e) {
+            t = e;
+        } else {
             return;
         }
 
-        if (t.parentNode && t.parentNode.classList.contains('tab-nav')) {
+        if (e.type && t.closest(this.options.tabHeadSelector)) {
             e.preventDefault();
+        }
 
+        if ((t.parentNode && t.parentNode.closest(this.options.tabNavSelector) && !t.parentNode.closest('.' + this.options.activeClass)) || (t.parentNode.closest('.' + this.options.activeClass) && !e.type)) {
+
+            //TODO need to be reviewed
             const tabElements = this.getTabElements(t);
+            //
 
-            if (e.type !== 'resize') {
-                this.makeElementsActive(tabElements.nav, tabElements.content, tabElements.activeElements);
+            this.makeElementsActive(tabElements.nav, tabElements.content, tabElements.activeElements);
 
-                this.setUnderlineCss(tabElements.underline, tabElements.tabHead, tabElements.nav);
-            }
+            this.setUnderlineCss(tabElements.underline, tabElements.tabHead, tabElements.nav);
 
             this.showActiveContent(tabElements.content, tabElements.tabBody);
         }
     },
+    options: {
+        events: ['click', 'mouseover'],
+        tabSectionSelector: '.tab-section',
+        tabHeadSelector: '.tab-head',
+        tabNavSelector: '.tab-nav',
+        tabBodySelector: '.tab-body',
+        tabContentSelector: '.tab-content',
+        underlineSelector: '.tab-underline',
+        switchTag: 'a',
+        switchIdAttribute: 'href',
+        activeClass: 'active'
+    },
     getTabElements(targetEl) {
         const nav = targetEl.parentNode,
-            tabHead = targetEl.closest('.tab-head'),
-            section = nav.closest('.tab-section'),
-            activeElements = section.querySelectorAll('.active'),
-            a = nav.querySelector('a'),
-            activeId = a.getAttribute('href'),
-            tabBody = section.querySelector('.tab-body'),
+            tabHead = targetEl.closest(this.options.tabHeadSelector),
+            section = nav.closest(this.options.tabSectionSelector),
+            activeElements = section.querySelectorAll('.' + this.options.activeClass),
+            a = nav.querySelector(this.options.switchTag),
+            activeId = a.getAttribute(this.options.switchIdAttribute),
+            tabBody = section.querySelector(this.options.tabBodySelector),
             content = section.querySelector(activeId),
-            underline = tabHead.querySelector('.tab-underline');
+            underline = tabHead.querySelector(this.options.underlineSelector);
 
         return {
             nav,
@@ -71,18 +105,18 @@ const tabSection = {
             ++contentI;
         }
 
-        const contents = tabBody.querySelectorAll('.tab-content');
+        const contents = tabBody.querySelectorAll(this.options.tabContentSelector);
         for (let i = 0; i < contents.length; i++) {
             contents[i].style.transform = `translateX(-${contentI * tabBody.offsetWidth}px)`;
         }
     },
     makeElementsActive(nav, content, activeElements) {
         for (let i = 0; i < activeElements.length; i++) {
-            activeElements[i].classList.remove('active');
+            activeElements[i].classList.remove(this.options.activeClass);
         }
 
-        nav.classList.add('active');
-        content.classList.add('active');
+        nav.classList.add(this.options.activeClass);
+        content.classList.add(this.options.activeClass);
     },
     setUnderlineCss(underline, head, nav) {
 
@@ -97,4 +131,28 @@ const tabSection = {
     }
 };
 
-window.onload = tabSection.init.bind(tabSection);
+/* default properties
+options = {
+        events: ['click', 'mouseover'],
+        tabSectionSelector: '.tab-section',
+        tabHeadSelector: '.tab-head',
+        tabNavSelector: '.tab-nav',
+        tabBodySelector: '.tab-body',
+        tabContentSelector: '.tab-content',
+        underlineSelector: '.tab-underline',
+        switchTag: 'a',
+        switchIdAttribute: 'href',
+        activeClass: 'active'
+}
+tabSection.init(options);
+*/
+
+window.onload = function () {
+
+    tabSection.init({
+
+    });
+
+};
+
+
