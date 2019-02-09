@@ -10,6 +10,8 @@ import './accordion';
 
 import './tabs';
 
+import './carousel';
+
 if (process.env.NODE_ENV !== 'production') {
     require('./../index.pug');
 }

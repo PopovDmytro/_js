@@ -51,7 +51,11 @@ const tabSection = {
 
         if ((t.parentNode && t.parentNode.closest(this.options.tabNavSelector) && !t.parentNode.closest('.' + this.options.activeClass)) || (t.parentNode.closest('.' + this.options.activeClass) && !e.type)) {
 
-            //TODO need to be reviewed
+            /*
+            * TODO need to be reviewed
+            * do not research useless elements on event
+            * all section elements bound on target a when event bubbling
+            */
             const tabElements = this.getTabElements(t);
             //
 
@@ -74,6 +78,11 @@ const tabSection = {
         switchIdAttribute: 'href',
         activeClass: 'active'
     },
+    /*
+    * TODO need to be reviewed
+    * do not research useless elements on event
+    * all section elements bound on target a when event bubbling
+    */
     getTabElements(targetEl) {
         const nav = targetEl.parentNode,
             tabHead = targetEl.closest(this.options.tabHeadSelector),
