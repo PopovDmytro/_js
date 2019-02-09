@@ -1,1 +1,1 @@
-'use strict';var lonVariableNameWithLorem=function lonVariableNameWithLorem(){console.log(123);return 123};var h1Tag=document.querySelector('h1');h1Tag.innerHTML='Nadiuhs Jopuha ';h1Tag.classList.remove('test');setTimeout(function(){h1Tag.classList.add('test')},3500);
+"use strict";var longVariableNameWithLorem=function longVariableNameWithLorem(){console.log(123);return 123};var h1Tag=document.querySelector("h1");h1Tag.innerHTML="alert";h1Tag.classList.remove("test");setTimeout(function(){h1Tag.classList.add("test")},3500);

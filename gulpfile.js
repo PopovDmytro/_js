@@ -1,107 +1,116 @@
 'use strict';
 
-const   gulp = require('gulp'),
-    $ = require('gulp-load-plugins')(),
-    watch = require('gulp-watch'),
+const gulp = require('gulp'),
     path = require('path'),
-    rs = require('run-sequence'),
     del = require('del'),
-    filter = require('gulp-filter'),
-    debug = require('gulp-debug');
+    plumber = require('gulp-plumber'),
+    debug = require('gulp-debug'),
+    concat = require('gulp-concat');
+
+//browser sync
+const browserSync  = require('browser-sync').create();
 //styles
-const   postcss = require('gulp-postcss'),
+const postcss = require('gulp-postcss'),
     autoprefixer = require('autoprefixer'),
     atImport = require('postcss-import'),
     mqpacker = require('css-mqpacker'),
-    cssnano = require('cssnano');
+    cssnano = require('cssnano'),
+    sass = require('gulp-sass'),
+    sourcemaps = require('gulp-sourcemaps');
 //js
 const babel = require('gulp-babel');
-
-process.env.NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
-const isDev = process.env.NODE_ENV === 'development';
-
-/**
- * Returns environment-dependant path
- */
-function getDestPath(p) {
-    return path.join(app.destBase, (p || ''));
-}
-
-function getLoadFileInfo() {
-    return require('./loadfile.json');
-}
-
+// file include
+const fileinclude = require('gulp-file-include');
 //path
 const app = {
-    destBase: __dirname
+    base: __dirname
 };
 
-app.srcScss = path.join(app.destBase, 'src/scss');
-app.destCss = path.join(app.destBase, 'destr/css');
-app.srcJs = path.join(app.destBase, 'src/js');
-app.destrJs = path.join(app.destBase, 'destr/js');
+app.srcScss = path.join(app.base, 'src/scss');
+app.destCss = path.join(app.base, 'destr/css');
+app.srcJs = path.join(app.base, 'src/js');
+app.destrJs = path.join(app.base, 'destr/js');
+app.srcLayouts = path.join(app.base, 'src/layouts');
 
-gulp.task('clean', ['cleancss']);
+// common livereload
+gulp.task('watch', function () {
+    browserSync.init({
+        server: app.base + '/destr',
+        port: '10000',
+        notify: false,
+        watch: true,
+        injectChanges: true,
+        // startPath: './*.html'
+        startPath: 'index.html'
+    });
+
+    gulp.watch(['./src/scss/**/*.scss'], gulp.series('scss'));
+    gulp.watch(['./src/js/**/*.js'], gulp.series('js'));
+    gulp.watch(['./destr/img/**/*.*'], gulp.series('reload'));
+    gulp.watch(['./src/layouts/**/*.html'], gulp.series('fileinclude', 'reload'));
+
+});
+
+gulp.task('reload', function (callback) {
+    browserSync.reload();
+    callback();
+});
 
 gulp.task('cleancss', function () {
-    return del(app.destCss + '*css*');
+    return del(app.destCss + '/**/*.css');
 });
 
 //compile scss to css
 gulp.task('scss', function () {
     return gulp.src(app.srcScss + '/**/*.scss')
-        .pipe($.plumber())
-        .pipe($.sourcemaps.init())
-        .pipe($.sass({
+        .pipe(plumber())
+        .pipe(sourcemaps.init())
+        .pipe(sass({
             outputStyle: 'expanded',
             includePaths: ['node_modules/']
-        })).on('error', $.sass.logError)
+        })).on('error', sass.logError)
         //adding auto-prefixes, minimization and optimization css
         .pipe(postcss([
-            autoprefixer({ browsers: ["last 3 versions", "IE 10"], }),
+            autoprefixer({browsers: ["last 5 versions", "IE 10"],}),
             atImport(),
             mqpacker(),
             cssnano()
         ]))
         .pipe(debug({title: 'compile:'}))
-        .pipe($.sourcemaps.write('.', {
+        .pipe(sourcemaps.write('.', {
             includeContent: false
         }))
         .pipe(gulp.dest(app.destCss))
-        .pipe(filter("**/*.css"))
-        .pipe($.livereload());
+        .pipe(browserSync.stream());
 });
 
 //js task
 gulp.task('js', function () {
     return gulp.src(app.srcJs + '/*.js')
         .pipe(babel({
-            presets: ['env'],
+            presets: ['@babel/env'],
             minified: true,
-            sourceMaps: 'map'
+            sourceMap: 'map'
         }))
+        .pipe(concat('bundle.js'))
         .pipe(gulp.dest(app.destrJs))
-        .pipe($.livereload());
+        .pipe(browserSync.stream());
 });
 
-//gulp watch js, scss files changes
-gulp.task('watch', function () {
-    $.livereload.listen();
-
-    gulp.watch(app.srcScss + '/**/*.scss', function () {
-        rs('scss');
-    });
-
-    gulp.watch(app.srcJs + '/*.js', function () {
-        rs('js');
-    });
+//gulp file include
+gulp.task('fileinclude', function () {
+    return gulp.src([app.base + '/src/layouts/**/*.html'])
+        .pipe(fileinclude({
+            prefix: '@@',
+            basepath: '@file'
+        }))
+        .pipe(gulp.dest(app.base + '/destr'))
+        .pipe(browserSync.stream());
 });
 
-// Dev tools by default
-gulp.task('default', function () {
-    rs('clean', 'scss', 'js', 'watch');
-});
-
-gulp.task('build', function () {
-    rs('clean', 'scss');
-});
+//default task
+gulp.task('default',
+    gulp.series('cleancss', 'fileinclude', 'scss', 'js',
+        gulp.parallel('watch')
+    )
+);
