@@ -1,2 +1,2 @@
-h1{font-size:150px}.test{color:red;position:fixed;left:50%;top:50%;-webkit-animation:rotate 3s linear infinite;animation:rotate 3s linear infinite}@-webkit-keyframes rotate{0%{-webkit-transform:translate(-50%,-50%) rotate(0);transform:translate(-50%,-50%) rotate(0)}to{-webkit-transform:translate(-50%,-50%) rotate(1turn);transform:translate(-50%,-50%) rotate(1turn)}}@keyframes rotate{0%{-webkit-transform:translate(-50%,-50%) rotate(0);transform:translate(-50%,-50%) rotate(0)}to{-webkit-transform:translate(-50%,-50%) rotate(1turn);transform:translate(-50%,-50%) rotate(1turn)}}
+
 /*# sourceMappingURL=styles.css.map */
