@@ -92,14 +92,14 @@ gulp.task('js', function () {
             minified: true,
             sourceMap: 'map'
         }))
-        .pipe(concat('bundle.js'))
+        // .pipe(concat('bundle.js'))
         .pipe(gulp.dest(app.destrJs))
         .pipe(browserSync.stream());
 });
 
 //gulp file include
 gulp.task('fileinclude', function () {
-    return gulp.src([app.base + '/src/layouts/**/*.html'])
+    return gulp.src([app.base + '/src/layouts/*.html'])
         .pipe(fileinclude({
             prefix: '@@',
             basepath: '@file'
