@@ -17,6 +17,15 @@
     <hr />
 
     <main>
+
+        <div class="control win-score-block">
+            <label >
+                Winner score is : <strong id="win-score_current"></strong>
+                <input type="tel" id="win-score_input">
+            </label>
+            <button type="button" id="win-score_set">Set win score</button>
+        </div>
+
         <div class="wrapper clearfix" data-pig-game="true">
             <div class="player-0-panel active">
                 <div class="player-name" id="name-0">Player 1</div>
@@ -40,7 +49,8 @@
             <button type="button" class="btn-roll"><i class="ion-ios-loop"></i>Roll dice</button>
             <button type="button" class="btn-hold"><i class="ion-ios-download-outline"></i>Hold</button>
 
-            <img src="img/pig-game/dice-5.png" alt="Dice" class="dice">
+            <img src="img/pig-game/dice-5.png" alt="Dice" class="dice" id="dice-0">
+            <img src="img/pig-game/dice-5.png" alt="Dice" class="dice" id="dice-1">
         </div>
     </main>
 
