@@ -56,6 +56,16 @@ const budgetController = (function () {
 
             return newItem;
         },
+        deleteItem (type, id) {
+            const ids = data.allItems[type].map((item, i) => {
+                return item.id;
+            });
+            const index = ids.indexOf(id);
+
+            if(~index) {
+                data.allItems[type].splice(index, 1);
+            }
+        },
         calculateBudget () {
             //Calculate total income and expenses
             calculateTotal('exp');
@@ -77,6 +87,9 @@ const budgetController = (function () {
                 percentage: data.percentage
             };
         }
+        ,test() {
+            return data;
+        }
     };
 })();
 
@@ -93,7 +106,8 @@ const UIController = (function () {
         budgetLabel: '.budget__value',
         incomeLabel: '.budget__income--value',
         expenseLabel: '.budget__expenses--value',
-        percentageLabel: '.budget__expenses--percentage'
+        percentageLabel: '.budget__expenses--percentage',
+        container: '.container'
     };
 
     return {
@@ -111,7 +125,7 @@ const UIController = (function () {
             if(type === 'inc') {
                 el = DOMstrings.incomeContainer;
                 html = `
-                    <div class="item clearfix" id="income-${obj.id}">
+                    <div class="item clearfix" id="inc-${obj.id}">
                         <div class="item__description">${obj.description}</div>
                         <div class="right clearfix">
                             <div class="item__value">${obj.value}</div>
@@ -124,7 +138,7 @@ const UIController = (function () {
             } else if(type === 'exp') {
                 el = DOMstrings.expenseContainer;
                 html = `
-                    <div class="item clearfix" id="expense-${obj.id}">
+                    <div class="item clearfix" id="exp-${obj.id}">
                         <div class="item__description">${obj.description}</div>
                         <div class="right clearfix">
                             <div class="item__value">${obj.value}</div>
@@ -139,6 +153,10 @@ const UIController = (function () {
             //Insert the HTML to the DOM
             document.querySelector(el).insertAdjacentHTML('beforeend', html);
 
+        },
+        deleteListItem (id) {
+            const el = document.getElementById(id);
+            el.parentNode.removeChild(el);
         },
         clearFields () {
             const fields = document.querySelectorAll(`${DOMstrings.inputDescription}, ${DOMstrings.inputValue}`);
@@ -178,6 +196,8 @@ const controller = (function (budgetCtrl, UICtrl) {
                 ctrlAddItem(e);
             }
         });
+
+        document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
     };
 
     const updateBudget = function () {
@@ -199,6 +219,22 @@ const controller = (function (budgetCtrl, UICtrl) {
             UICtrl.addListItem(newItem, input.type);
             UICtrl.clearFields();
             //Calculate and update budget
+            updateBudget();
+        }
+    };
+
+    const ctrlDeleteItem = function (e) {
+        const itemID = e.target.parentNode.parentNode.parentNode.parentNode.id;
+        if(itemID) {
+            const splitID = itemID.split('-'),
+            type = splitID[0],
+            id = parseInt(splitID[1]);
+
+            //delete the item from the data structure
+            budgetCtrl.deleteItem(type, id);
+            //delete item from the UI
+            UICtrl.deleteListItem(itemID);
+            //Update and show the new budget
             updateBudget();
         }
     };
