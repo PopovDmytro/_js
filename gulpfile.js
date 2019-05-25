@@ -88,9 +88,9 @@ gulp.task('scss', function () {
 gulp.task('js', function () {
     return gulp.src(app.srcJs + '/*.js')
         .pipe(babel({
-            presets: ['@babel/env'],
-            minified: true,
-            sourceMap: 'map'
+            // presets: ['@babel/env'],
+            // minified: true,
+            // sourceMap: 'map'
         }))
         // .pipe(concat('bundle.js'))
         .pipe(gulp.dest(app.destrJs))
