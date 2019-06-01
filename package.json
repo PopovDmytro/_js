@@ -25,6 +25,8 @@
         "webpack-dev-server": "^3.4.1"
     },
     "dependencies": {
-        "@babel/polyfill": "^7.4.4"
+        "@babel/polyfill": "^7.4.4",
+        "axios": "^0.18.0",
+        "fractional": "^1.0.0"
     }
 }
