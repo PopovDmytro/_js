@@ -67,14 +67,13 @@ elements.searchResPages.addEventListener('click', e => {
 /**
  * RECIPE CONTROLLER
  */
-
 const controlRecipe = async () => {
     //Get ID from url
     const id = window.location.hash.replace('#', '');
 
     if (id) {
         // Prepare UI for changes
-        recipeView.cleareRecipe();
+        recipeView.clearRecipe();
         renderLoader(elements.recipe);
 
         // Highlight selected search item
@@ -108,7 +107,6 @@ const controlRecipe = async () => {
 /**
  * LIST CONTROLLER
  */
-
 const controlList = () => {
     // Create a new list IF there in none yet
     if (!state.list) state.list = new List();
@@ -133,7 +131,6 @@ elements.shopping.addEventListener('click', (e) => {
         state.list.updateCount(id, val);
     }
 });
-
 
 /**
  * LIKE CONTROLLER
@@ -194,6 +191,5 @@ elements.recipe.addEventListener('click', (e) => {
         //Like controller
         controlLike();
     }
-
 });
 
